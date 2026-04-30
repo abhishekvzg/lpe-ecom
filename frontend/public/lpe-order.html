@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>La Patisserie Express — Premium Coffee & Pastries</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #8B0000;
+            --primary-hover: #C0392B;
+            --accent: #F5E6D3;
+            --bg-dark: #0E0A08;
+            --bg-card: rgba(255, 255, 255, 0.06);
+            --bg-card-hover: rgba(255, 255, 255, 0.09);
+            --text-main: #F5E6D3;
+            --text-dim: rgba(245, 230, 211, 0.7);
+            --text-dimmer: rgba(245, 230, 211, 0.5);
+            --border-subtle: rgba(245, 230, 211, 0.15);
+            --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-button: 0 2px 8px rgba(139, 0, 0, 0.4);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Typography */
+        h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; line-height: 1.2; }
+        h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; line-height: 1.3; }
+        h3 { font-size: 1.125rem; font-weight: 600; }
+        p { font-size: 1rem; color: var(--text-dim); }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(14, 10, 8, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .logo-svg {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+        
+        .cart-icon-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .cart-icon-btn:hover {
+            background: var(--bg-card-hover);
+            transform: scale(1.05);
+        }
+        
+        .cart-icon-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--accent);
+            fill: none;
+            stroke-width: 2;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.6);
+        }
+        
+        .cart-badge.hidden {
+            display: none;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+        
+        /* Pages */
+        .page {
+            display: none;
+            min-height: calc(100vh - 80px);
+            animation: fadeUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        /* Landing Page */
+        .hero {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3rem 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(139, 0, 0, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+        }
+        
+        .hero-logo-svg {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            filter: drop-shadow(0 8px 24px rgba(139, 0, 0, 0.3));
+        }
+        
+        .hero h1 {
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent) 0%, #D4C4B8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-tagline {
+            font-size: 1.125rem;
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .hero-subtext {
+            font-size: 1rem;
+            color: var(--text-dimmer);
+            margin-bottom: 3rem;
+        }
+        
+        .order-type-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 768px) {
+            .order-type-cards {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .order-type-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .order-type-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card);
+        }
+        
+        .order-type-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .order-type-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .order-type-desc {
+            font-size: 0.875rem;
+            color: var(--text-dimmer);
+        }
+        
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 0.75rem 0;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .back-btn:hover {
+            color: var(--accent);
+            transform: translateX(-4px);
+        }
+        
+        /* Outlets Page */
+        .section-header {
+            padding: 2rem 0 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-subtitle {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            color: var(--accent);
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--bg-card-hover);
+        }
+        
+        .search-bar::placeholder {
+            color: var(--text-dimmer);
+        }
+        
+        .outlet-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            padding-bottom: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .outlet-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .outlet-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+        }
+        
+        .outlet-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-card);
+        }
+        
+        .outlet-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .outlet-address {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+        }
+        
+        .outlet-hours {
+            font-size: 0.75rem;
+            color: var(--text-dimmer);
+            background: rgba(139, 0, 0, 0.2);
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        /* Menu Page */
+        .menu-context {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .menu-context-icon {
+            font-size: 1.5rem;
+        }
+        
+        .menu-context-text {
+            flex: 1;
+        }
+        
+        .menu-context-label {
+            font-size: 0.75rem;
+            color: var(--text-dimmer);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .menu-context-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .category-tabs {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .category-tab {
+            flex-shrink: 0;
+            padding: 0.75rem 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            color: var(--text-dim);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        
+        .category-tab:hover {
+            background: var(--bg-card-hover);
+            color: var(--accent);
+        }
+        
+        .category-tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            padding-bottom: 6rem;
+        }
+        
+        @media (min-width: 768px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .menu-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .menu-item-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .menu-item-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-card);
+        }
+        
+        .menu-item-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .menu-item-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-item-desc {
+            font-size: 0.875rem;
+            color: var(--text-dimmer);
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+        
+        .menu-item-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .menu-item-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .menu-item-price small {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-dimmer);
+        }
+        
+        /* Floating Cart Button */
+        .floating-cart-btn {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 1.25rem;
+            right: 1.25rem;
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(139, 0, 0, 0.6);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 50;
+        }
+        
+        .floating-cart-btn.hidden {
+            display: none;
+        }
+        
+        .floating-cart-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(139, 0, 0, 0.7);
+        }
+        
+        .floating-cart-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+        
+        /* Item Detail Page */
+        .item-detail {
+            padding: 2rem 0 6rem;
+        }
+        
+        .item-icon-large {
+            font-size: 8rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .item-name {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-desc {
+            text-align: center;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+        
+        .item-price-large {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+        
+        .customization-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .customization-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .qty-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .qty-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .qty-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .option-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .option-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        
+        .option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        
+        .option-btn {
+            padding: 0.625rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-dim);
+            font-family: inherit;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .option-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+            color: var(--accent);
+        }
+        
+        .option-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.75rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .checkbox-label:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+        }
+        
+        .checkbox-label span {
+            flex: 1;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+        
+        .checkbox-label .addon-price {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .textarea-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--accent);
+            font-family: inherit;
+            font-size: 0.875rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: var(--transition);
+        }
+        
+        .textarea-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--bg-card-hover);
+        }
+        
+        .textarea-input::placeholder {
+            color: var(--text-dimmer);
+        }
+        
+        /* Primary Button */
+        .btn-primary {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-button);
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(139, 0, 0, 0.6);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary.btn-added {
+            background: #2E7D32;
+            pointer-events: none;
+        }
+        
+        /* Cart Page */
+        .cart-empty {
+            text-align: center;
+            padding: 4rem 1.25rem;
+        }
+        
+        .cart-empty-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .cart-empty-text {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+        
+        .cart-items-list {
+            padding: 2rem 0;
+        }
+        
+        .cart-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+        
+        .cart-item-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--accent);
+            flex: 1;
+        }
+        
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--text-dimmer);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+        
+        .cart-item-remove:hover {
+            background: rgba(192, 57, 43, 0.2);
+            color: #C0392B;
+        }
+        
+        .cart-item-mods {
+            font-size: 0.875rem;
+            color: var(--text-dimmer);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+        
+        .cart-item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-item-qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .cart-qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-subtle);
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cart-qty-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .cart-item-qty {
+            font-size: 1rem;
+            font-weight: 600;
+            min-width: 32px;
+            text-align: center;
+        }
+        
+        .cart-item-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .cart-summary {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .summary-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .summary-row.total {
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .summary-label {
+            color: var(--text-dim);
+        }
+        
+        .summary-value {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .cart-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding-bottom: 2rem;
+        }
+        
+        .btn-secondary {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            color: var(--accent);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+        }
+        
+        /* Checkout Page */
+        .checkout-section {
+            padding: 2rem 0;
+        }
+        
+        .checkout-section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .eta-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .eta-options {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .eta-option {
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .eta-option:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+        }
+        
+        .eta-option.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .eta-option-time {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .eta-option-label {
+            font-size: 0.75rem;
+            color: var(--text-dimmer);
+        }
+        
+        .eta-option.active .eta-option-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--accent);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--bg-card-hover);
+        }
+        
+        .form-input::placeholder {
+            color: var(--text-dimmer);
+        }
+        
+        .form-input.error {
+            border-color: #C0392B;
+        }
+        
+        .form-error {
+            font-size: 0.75rem;
+            color: #C0392B;
+            margin-top: 0.25rem;
+        }
+        
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        
+        @media (min-width: 768px) {
+            .payment-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .payment-option {
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .payment-option:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+        }
+        
+        .payment-option.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .payment-icon {
+            font-size: 1.5rem;
+        }
+        
+        .payment-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        /* Confirmation Page */
+        .confirmation {
+            padding: 3rem 1.25rem;
+            text-align: center;
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #2E7D32;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+        
+        .checkmark svg {
+            width: 48px;
+            height: 48px;
+            stroke: white;
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            animation: drawCheck 0.5s 0.3s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+        }
+        
+        @keyframes drawCheck {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        .confirmation-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .order-ref {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+        
+        .confirmation-details {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            max-width: 500px;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .confirmation-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .confirmation-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .confirmation-row-label {
+            color: var(--text-dim);
+        }
+        
+        .confirmation-row-value {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .confirmation-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 12px;
+            background: var(--primary);
+            animation: confettiFall 3s linear forwards;
+            opacity: 0;
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-dark);
+            color: var(--accent);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 2rem 1.25rem;
+            text-align: center;
+            color: var(--text-dimmer);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Loading State */
+        .loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="#" class="logo" onclick="showPage('landing'); return false;">
+            <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="#8B0000" stroke-width="2"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#F5E6D3" stroke-width="1"/>
+                <text x="50" y="35" font-family="DM Sans" font-size="10" font-weight="700" fill="#8B0000" text-anchor="middle">LA PATISSERIE</text>
+                <text x="50" y="55" font-family="DM Sans" font-size="14" font-weight="700" fill="#8B0000" text-anchor="middle">EXPRESS</text>
+                <path d="M 30 65 Q 50 75 70 65" stroke="#F5E6D3" fill="none" stroke-width="2"/>
+            </svg>
+            <span>LPE</span>
+        </a>
+        <button class="cart-icon-btn" onclick="showPage('cart')">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 2L7 4H3C1.9 4 1 4.9 1 6V19C1 20.1 1.9 21 3 21H21C22.1 21 23 20.1 23 19V6C23 4.9 22.1 4 21 4H17L15 2H9Z" />
+                <circle cx="12" cy="13" r="3" />
+            </svg>
+            <span class="cart-badge hidden" id="cartBadge">0</span>
+        </button>
+    </header>
+
+    <!-- Page: Landing -->
+    <div id="page-landing" class="page active">
+        <section class="hero">
+            <div class="hero-content">
+                <svg class="hero-logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#8B0000;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#C0392B;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="100" cy="100" r="95" fill="none" stroke="url(#logoGrad)" stroke-width="4"/>
+                    <circle cx="100" cy="100" r="82" fill="none" stroke="#F5E6D3" stroke-width="2"/>
+                    <text x="100" y="70" font-family="DM Sans" font-size="18" font-weight="700" fill="#8B0000" text-anchor="middle">LA PATISSERIE</text>
+                    <text x="100" y="110" font-family="DM Sans" font-size="28" font-weight="700" fill="#8B0000" text-anchor="middle">EXPRESS</text>
+                    <path d="M 50 135 Q 100 155 150 135" stroke="#F5E6D3" fill="none" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                
+                <h1>PREMIUM COFFEE.<br>GREAT FOOD.</h1>
+                <p class="hero-tagline">ENERGIZING YOU ON THE MOVE</p>
+                <p class="hero-subtext">Handcrafted drinks & freshly baked pastries, ready when you are.</p>
+                
+                <div class="order-type-cards">
+                    <div class="order-type-card" onclick="selectOrderType('pickup')">
+                        <div class="order-type-icon">🏪</div>
+                        <div class="order-type-title">PICKUP</div>
+                        <div class="order-type-desc">Order ahead, skip the queue</div>
+                    </div>
+                    <div class="order-type-card" onclick="selectOrderType('delivery')">
+                        <div class="order-type-icon">🛵</div>
+                        <div class="order-type-title">DELIVERY</div>
+                        <div class="order-type-desc">Get it delivered to you</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Page: Outlets -->
+    <div id="page-outlets" class="page">
+        <div class="container">
+            <button class="back-btn" onclick="showPage('landing')">← Back</button>
+            
+            <div class="section-header">
+                <h2 class="section-title">Choose Your Outlet</h2>
+                <p class="section-subtitle">Select the location nearest to you</p>
+            </div>
+            
+            <input type="text" class="search-bar" placeholder="Search outlets..." id="outletSearch" oninput="filterOutlets()">
+            
+            <div class="outlet-grid" id="outletGrid"></div>
+        </div>
+    </div>
+
+    <!-- Page: Menu -->
+    <div id="page-menu" class="page">
+        <div class="container">
+            <button class="back-btn" id="menuBackBtn">← Back</button>
+            
+            <div class="menu-context" id="menuContext"></div>
+            
+            <input type="text" class="search-bar" placeholder="Search menu..." id="menuSearch" oninput="filterMenu()">
+            
+            <div class="category-tabs" id="categoryTabs"></div>
+            
+            <div class="menu-grid" id="menuGrid"></div>
+        </div>
+        
+        <button class="floating-cart-btn hidden" id="floatingCartBtn" onclick="showPage('cart')">
+            <span>VIEW CART</span>
+            <span class="floating-cart-count" id="floatingCartCount">0 items</span>
+        </button>
+    </div>
+
+    <!-- Page: Item Detail -->
+    <div id="page-item" class="page">
+        <div class="container">
+            <button class="back-btn" onclick="showPage('menu')">← Back</button>
+            
+            <div class="item-detail" id="itemDetail"></div>
+        </div>
+    </div>
+
+    <!-- Page: Cart -->
+    <div id="page-cart" class="page">
+        <div class="container">
+            <button class="back-btn" onclick="showPage('menu')">← Back to Menu</button>
+            
+            <div class="section-header">
+                <h2 class="section-title">Your Cart</h2>
+            </div>
+            
+            <div id="cartContent"></div>
+        </div>
+    </div>
+
+    <!-- Page: Checkout -->
+    <div id="page-checkout" class="page">
+        <div class="container">
+            <button class="back-btn" onclick="showPage('cart')">← Back to Cart</button>
+            
+            <div class="section-header">
+                <h2 class="section-title">Checkout</h2>
+            </div>
+            
+            <div id="checkoutContent"></div>
+        </div>
+    </div>
+
+    <!-- Page: Confirmation -->
+    <div id="page-confirmation" class="page">
+        <div class="confirmation" id="confirmationContent"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        © 2025 La Patisserie Express | Kampala, Uganda
+    </footer>
+
+    <script>
+        // ========================
+        // DATA STRUCTURE
+        // ========================
+        
+        const OUTLETS = [
+            { name: 'Lugogo Bypass', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Kololo Hill', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Ntinda', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Kampala-Jinja Road', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Acacia Mall, Kisementi', area: 'Kampala', hours: '9 AM – 9 PM' },
+            { name: 'Garden City Mall', area: 'Kampala', hours: '9 AM – 9 PM' },
+            { name: 'Oasis Mall, Nakasero', area: 'Kampala', hours: '9 AM – 9 PM' },
+            { name: 'Nakumatt Junction', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Bugolobi', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Muyenga', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Wandegeya', area: 'Kampala', hours: '6 AM – 11 PM' },
+            { name: 'Nateete', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Mukono', area: 'Mukono', hours: '7 AM – 9 PM' },
+            { name: 'Entebbe Road', area: 'Entebbe Road', hours: '7 AM – 10 PM' },
+            { name: 'Entebbe Town', area: 'Entebbe', hours: '7 AM – 9 PM' },
+            { name: 'Kitintale', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Bukoto', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Kabalagala', area: 'Kampala', hours: '7 AM – 10 PM' },
+            { name: 'Makerere', area: 'Kampala', hours: '6 AM – 11 PM' },
+            { name: 'Namugongo', area: 'Kampala', hours: '7 AM – 9 PM' }
+        ];
+
+        const MENU_ITEMS = [
+            // Hot Drinks
+            { id: 1, name: 'Espresso', price: 8000, category: 'Hot Drinks', icon: '☕', desc: 'Bold single shot', customizable: true },
+            { id: 2, name: 'Americano', price: 9000, category: 'Hot Drinks', icon: '☕', desc: 'Smooth long black', customizable: true },
+            { id: 3, name: 'Cappuccino', price: 12000, category: 'Hot Drinks', icon: '☕', desc: 'Silky steamed milk art', customizable: true },
+            { id: 4, name: 'Latte', price: 13000, category: 'Hot Drinks', icon: '☕', desc: 'Creamy espresso classic', customizable: true },
+            { id: 5, name: 'Flat White', price: 13000, category: 'Hot Drinks', icon: '☕', desc: 'Velvety microfoam', customizable: true },
+            { id: 6, name: 'Mocha', price: 14000, category: 'Hot Drinks', icon: '☕', desc: 'Coffee meets chocolate', customizable: true },
+            { id: 7, name: 'Hot Chocolate', price: 12000, category: 'Hot Drinks', icon: '🍫', desc: 'Rich cocoa indulgence', customizable: true },
+            { id: 8, name: 'Masala Chai Latte', price: 13000, category: 'Hot Drinks', icon: '🫖', desc: 'Spiced tea blend', customizable: true },
+            
+            // Cold Drinks
+            { id: 9, name: 'Iced Latte', price: 14000, category: 'Cold Drinks', icon: '🧊', desc: 'Chilled espresso smooth', customizable: true },
+            { id: 10, name: 'Iced Americano', price: 11000, category: 'Cold Drinks', icon: '🧊', desc: 'Cold brew refresher', customizable: true },
+            { id: 11, name: 'Cold Brew', price: 15000, category: 'Cold Drinks', icon: '🧊', desc: 'Slow-steeped perfection', customizable: true },
+            { id: 12, name: 'Iced Mocha', price: 16000, category: 'Cold Drinks', icon: '🧊', desc: 'Chocolate coffee chilled', customizable: true },
+            { id: 13, name: 'Frappuccino (Vanilla)', price: 17000, category: 'Cold Drinks', icon: '🥤', desc: 'Blended frozen treat', customizable: true },
+            { id: 14, name: 'Frappuccino (Caramel)', price: 17000, category: 'Cold Drinks', icon: '🥤', desc: 'Sweet caramel blend', customizable: true },
+            { id: 15, name: 'Frappuccino (Mocha)', price: 17000, category: 'Cold Drinks', icon: '🥤', desc: 'Chocolatey frozen delight', customizable: true },
+            { id: 16, name: 'Fresh Orange Juice', price: 10000, category: 'Cold Drinks', icon: '🍊', desc: 'Freshly squeezed citrus', customizable: false },
+            { id: 17, name: 'Mango Smoothie', price: 14000, category: 'Cold Drinks', icon: '🥭', desc: 'Tropical fruit blend', customizable: false },
+            
+            // Sandwiches & Wraps
+            { id: 18, name: 'Chicken Coronation Sandwich', price: 32000, category: 'Sandwiches & Wraps', icon: '🥪', desc: 'Creamy curried chicken', customizable: false },
+            { id: 19, name: 'Steak Sandwich', price: 38000, category: 'Sandwiches & Wraps', icon: '🥪', desc: 'Tender grilled beef', customizable: false },
+            { id: 20, name: 'BBQ Pork Wrap', price: 35000, category: 'Sandwiches & Wraps', icon: '🌯', desc: 'Smoky pulled pork', customizable: false },
+            { id: 21, name: 'Steak House Wrap', price: 35000, category: 'Sandwiches & Wraps', icon: '🌯', desc: 'Premium beef wrap', customizable: false },
+            { id: 22, name: 'Veggie Club Sandwich', price: 28000, category: 'Sandwiches & Wraps', icon: '🥪', desc: 'Fresh garden layers', customizable: false },
+            { id: 23, name: 'Tuna Melt Sandwich', price: 30000, category: 'Sandwiches & Wraps', icon: '🥪', desc: 'Cheesy tuna delight', customizable: false },
+            { id: 24, name: 'Chicken Caesar Wrap', price: 32000, category: 'Sandwiches & Wraps', icon: '🌯', desc: 'Classic Caesar flavors', customizable: false },
+            
+            // Pastries & Bakes
+            { id: 25, name: 'Butter Croissant', price: 8000, category: 'Pastries & Bakes', icon: '🥐', desc: 'Flaky golden layers', customizable: false },
+            { id: 26, name: 'Almond Croissant', price: 10000, category: 'Pastries & Bakes', icon: '🥐', desc: 'Sweet almond filling', customizable: false },
+            { id: 27, name: 'Chocolate Muffin', price: 9000, category: 'Pastries & Bakes', icon: '🧁', desc: 'Double chocolate delight', customizable: false },
+            { id: 28, name: 'Blueberry Muffin', price: 9000, category: 'Pastries & Bakes', icon: '🧁', desc: 'Bursting with berries', customizable: false },
+            { id: 29, name: 'Cinnamon Roll', price: 11000, category: 'Pastries & Bakes', icon: '🥮', desc: 'Warm spiced swirl', customizable: false },
+            { id: 30, name: 'Cheese Scone', price: 9000, category: 'Pastries & Bakes', icon: '🧀', desc: 'Savory baked treat', customizable: false },
+            { id: 31, name: 'Pain au Chocolat', price: 11000, category: 'Pastries & Bakes', icon: '🥐', desc: 'Chocolate pastry bliss', customizable: false },
+            
+            // Salads & Snacks
+            { id: 32, name: 'Caesar Salad', price: 22000, category: 'Salads & Snacks', icon: '🥗', desc: 'Classic crisp greens', customizable: false },
+            { id: 33, name: 'Greek Salad', price: 20000, category: 'Salads & Snacks', icon: '🥗', desc: 'Mediterranean fresh', customizable: false },
+            { id: 34, name: 'Chicken Nicoise Salad', price: 25000, category: 'Salads & Snacks', icon: '🥗', desc: 'French-style protein bowl', customizable: false },
+            { id: 35, name: 'Fruit Cup', price: 12000, category: 'Salads & Snacks', icon: '🍎', desc: 'Seasonal fresh fruit', customizable: false },
+            { id: 36, name: 'Cheese & Crackers', price: 15000, category: 'Salads & Snacks', icon: '🧀', desc: 'Artisan cheese platter', customizable: false },
+            
+            // Cakes & Desserts
+            { id: 37, name: 'Chocolate Fudge Cake (slice)', price: 14000, category: 'Cakes & Desserts', icon: '🍰', desc: 'Decadent chocolate layers', customizable: false },
+            { id: 38, name: 'Carrot Cake (slice)', price: 13000, category: 'Cakes & Desserts', icon: '🍰', desc: 'Spiced cream cheese frosting', customizable: false },
+            { id: 39, name: 'Cheesecake (slice)', price: 15000, category: 'Cakes & Desserts', icon: '🍰', desc: 'Creamy New York style', customizable: false },
+            { id: 40, name: 'Tiramisu', price: 16000, category: 'Cakes & Desserts', icon: '🍰', desc: 'Italian coffee dessert', customizable: false }
+        ];
+
+        const CATEGORIES = ['All', 'Hot Drinks', 'Cold Drinks', 'Sandwiches & Wraps', 'Pastries & Bakes', 'Salads & Snacks', 'Cakes & Desserts'];
+
+        // ========================
+        // STATE MANAGEMENT
+        // ========================
+        
+        let state = {
+            orderType: localStorage.getItem('lpe_order_type') || null,
+            selectedOutlet: localStorage.getItem('lpe_selected_outlet') || null,
+            deliveryAddress: JSON.parse(localStorage.getItem('lpe_delivery_address') || 'null'),
+            cart: JSON.parse(localStorage.getItem('lpe_cart') || '[]'),
+            customer: JSON.parse(localStorage.getItem('lpe_customer') || 'null'),
+            eta: localStorage.getItem('lpe_eta') || null,
+            paymentMethod: localStorage.getItem('lpe_payment_method') || null,
+            currentCategory: 'All',
+            currentItem: null
+        };
+
+        // ========================
+        // HELPER FUNCTIONS
+        // ========================
+        
+        function formatPrice(price) {
+            return price.toLocaleString('en-UG') + ' UGX';
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            window.scrollTo(0, 0);
+            
+            // Update cart badge
+            updateCartBadge();
+            
+            // Special page handlers
+            if (pageId === 'outlets') renderOutlets();
+            if (pageId === 'menu') renderMenu();
+            if (pageId === 'cart') renderCart();
+            if (pageId === 'checkout') renderCheckout();
+        }
+
+        function updateCartBadge() {
+            const count = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.getElementById('cartBadge');
+            const floatingBtn = document.getElementById('floatingCartBtn');
+            const floatingCount = document.getElementById('floatingCartCount');
+            
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+                if (floatingBtn) {
+                    floatingBtn.classList.remove('hidden');
+                    floatingCount.textContent = `${count} item${count > 1 ? 's' : ''} • ${formatPrice(getCartTotal())}`;
+                }
+            } else {
+                badge.classList.add('hidden');
+                if (floatingBtn) floatingBtn.classList.add('hidden');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function saveState() {
+            localStorage.setItem('lpe_order_type', state.orderType || '');
+            localStorage.setItem('lpe_selected_outlet', state.selectedOutlet || '');
+            localStorage.setItem('lpe_delivery_address', JSON.stringify(state.deliveryAddress));
+            localStorage.setItem('lpe_cart', JSON.stringify(state.cart));
+            localStorage.setItem('lpe_customer', JSON.stringify(state.customer));
+            localStorage.setItem('lpe_eta', state.eta || '');
+            localStorage.setItem('lpe_payment_method', state.paymentMethod || '');
+        }
+
+        // ========================
+        // ORDER TYPE SELECTION
+        // ========================
+        
+        function selectOrderType(type) {
+            state.orderType = type;
+            saveState();
+            
+            if (type === 'pickup') {
+                showPage('outlets');
+            } else {
+                showPage('menu');
+                renderMenu();
+            }
+        }
+
+        // ========================
+        // OUTLETS PAGE
+        // ========================
+        
+        function renderOutlets() {
+            const grid = document.getElementById('outletGrid');
+            grid.innerHTML = OUTLETS.map(outlet => `
+                <div class="outlet-card" onclick="selectOutlet('${outlet.name}')">
+                    <h3>${outlet.name}</h3>
+                    <div class="outlet-address">${outlet.area}</div>
+                    <div class="outlet-hours">${outlet.hours}</div>
+                </div>
+            `).join('');
+        }
+
+        function filterOutlets() {
+            const search = document.getElementById('outletSearch').value.toLowerCase();
+            const grid = document.getElementById('outletGrid');
+            
+            const filtered = OUTLETS.filter(outlet => 
+                outlet.name.toLowerCase().includes(search) ||
+                outlet.area.toLowerCase().includes(search)
+            );
+            
+            grid.innerHTML = filtered.map(outlet => `
+                <div class="outlet-card" onclick="selectOutlet('${outlet.name}')">
+                    <h3>${outlet.name}</h3>
+                    <div class="outlet-address">${outlet.area}</div>
+                    <div class="outlet-hours">${outlet.hours}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectOutlet(outletName) {
+            state.selectedOutlet = outletName;
+            saveState();
+            showPage('menu');
+            renderMenu();
+        }
+
+        // ========================
+        // MENU PAGE
+        // ========================
+        
+        function renderMenu() {
+            // Update context
+            const context = document.getElementById('menuContext');
+            if (state.orderType === 'pickup' && state.selectedOutlet) {
+                context.innerHTML = `
+                    <div class="menu-context-icon">📍</div>
+                    <div class="menu-context-text">
+                        <div class="menu-context-label">Picking up from</div>
+                        <div class="menu-context-value">${state.selectedOutlet}</div>
+                    </div>
+                `;
+            } else if (state.orderType === 'delivery') {
+                context.innerHTML = `
+                    <div class="menu-context-icon">🛵</div>
+                    <div class="menu-context-text">
+                        <div class="menu-context-label">Delivery Order</div>
+                        <div class="menu-context-value">ETA: 30-45 minutes</div>
+                    </div>
+                `;
+            }
+            
+            // Update back button
+            const backBtn = document.getElementById('menuBackBtn');
+            backBtn.onclick = () => {
+                if (state.orderType === 'pickup') {
+                    showPage('outlets');
+                } else {
+                    showPage('landing');
+                }
+            };
+            
+            // Render category tabs
+            const tabs = document.getElementById('categoryTabs');
+            tabs.innerHTML = CATEGORIES.map(cat => `
+                <button class="category-tab ${state.currentCategory === cat ? 'active' : ''}" 
+                        onclick="filterByCategory('${cat}')">
+                    ${cat}
+                </button>
+            `).join('');
+            
+            // Render menu items
+            renderMenuItems();
+        }
+
+        function renderMenuItems() {
+            const grid = document.getElementById('menuGrid');
+            const items = state.currentCategory === 'All' 
+                ? MENU_ITEMS 
+                : MENU_ITEMS.filter(item => item.category === state.currentCategory);
+            
+            grid.innerHTML = items.map(item => `
+                <div class="menu-item-card" onclick="viewItem(${item.id})">
+                    <div class="menu-item-icon">${item.icon}</div>
+                    <div class="menu-item-name">${item.name}</div>
+                    <div class="menu-item-desc">${item.desc}</div>
+                    <div class="menu-item-footer">
+                        <div class="menu-item-price">${formatPrice(item.price)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterByCategory(category) {
+            state.currentCategory = category;
+            renderMenu();
+        }
+
+        function filterMenu() {
+            const search = document.getElementById('menuSearch').value.toLowerCase();
+            const grid = document.getElementById('menuGrid');
+            
+            const filtered = MENU_ITEMS.filter(item => 
+                item.name.toLowerCase().includes(search) ||
+                item.desc.toLowerCase().includes(search)
+            );
+            
+            grid.innerHTML = filtered.map(item => `
+                <div class="menu-item-card" onclick="viewItem(${item.id})">
+                    <div class="menu-item-icon">${item.icon}</div>
+                    <div class="menu-item-name">${item.name}</div>
+                    <div class="menu-item-desc">${item.desc}</div>
+                    <div class="menu-item-footer">
+                        <div class="menu-item-price">${formatPrice(item.price)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ========================
+        // ITEM DETAIL PAGE
+        // ========================
+        
+        function viewItem(itemId) {
+            const item = MENU_ITEMS.find(i => i.id === itemId);
+            state.currentItem = {
+                ...item,
+                quantity: 1,
+                size: 'Regular',
+                milk: 'Whole',
+                sugar: 'Normal',
+                addons: [],
+                notes: ''
+            };
+            
+            renderItemDetail();
+            showPage('item');
+        }
+
+        function renderItemDetail() {
+            const item = state.currentItem;
+            const detail = document.getElementById('itemDetail');
+            
+            let customizationHTML = '';
+            
+            if (item.customizable) {
+                customizationHTML = `
+                    <div class="customization-section">
+                        <div class="customization-title">Quantity</div>
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="updateQuantity(-1)">−</button>
+                            <span class="qty-display" id="qtyDisplay">${item.quantity}</span>
+                            <button class="qty-btn" onclick="updateQuantity(1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="customization-section">
+                        <div class="option-group">
+                            <label class="option-label">Size</label>
+                            <div class="option-buttons">
+                                <button class="option-btn ${item.size === 'Regular' ? 'active' : ''}" 
+                                        onclick="updateOption('size', 'Regular')">Regular</button>
+                                <button class="option-btn ${item.size === 'Large' ? 'active' : ''}" 
+                                        onclick="updateOption('size', 'Large')">Large (+2,000)</button>
+                            </div>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label class="option-label">Milk</label>
+                            <div class="option-buttons">
+                                <button class="option-btn ${item.milk === 'Whole' ? 'active' : ''}" 
+                                        onclick="updateOption('milk', 'Whole')">Whole</button>
+                                <button class="option-btn ${item.milk === 'Oat' ? 'active' : ''}" 
+                                        onclick="updateOption('milk', 'Oat')">Oat (+1,500)</button>
+                                <button class="option-btn ${item.milk === 'Soy' ? 'active' : ''}" 
+                                        onclick="updateOption('milk', 'Soy')">Soy (+1,500)</button>
+                                <button class="option-btn ${item.milk === 'Skimmed' ? 'active' : ''}" 
+                                        onclick="updateOption('milk', 'Skimmed')">Skimmed</button>
+                            </div>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label class="option-label">Sugar</label>
+                            <div class="option-buttons">
+                                <button class="option-btn ${item.sugar === 'None' ? 'active' : ''}" 
+                                        onclick="updateOption('sugar', 'None')">None</button>
+                                <button class="option-btn ${item.sugar === 'Less' ? 'active' : ''}" 
+                                        onclick="updateOption('sugar', 'Less')">Less</button>
+                                <button class="option-btn ${item.sugar === 'Normal' ? 'active' : ''}" 
+                                        onclick="updateOption('sugar', 'Normal')">Normal</button>
+                                <button class="option-btn ${item.sugar === 'Extra' ? 'active' : ''}" 
+                                        onclick="updateOption('sugar', 'Extra')">Extra</button>
+                            </div>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label class="option-label">Add-ons</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" ${item.addons.includes('Extra shot') ? 'checked' : ''} 
+                                           onchange="toggleAddon('Extra shot')">
+                                    <span>Extra shot</span>
+                                    <span class="addon-price">+2,000</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" ${item.addons.includes('Whipped cream') ? 'checked' : ''} 
+                                           onchange="toggleAddon('Whipped cream')">
+                                    <span>Whipped cream</span>
+                                    <span class="addon-price">+1,500</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" ${item.addons.includes('Vanilla syrup') ? 'checked' : ''} 
+                                           onchange="toggleAddon('Vanilla syrup')">
+                                    <span>Vanilla syrup</span>
+                                    <span class="addon-price">+1,000</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" ${item.addons.includes('Caramel syrup') ? 'checked' : ''} 
+                                           onchange="toggleAddon('Caramel syrup')">
+                                    <span>Caramel syrup</span>
+                                    <span class="addon-price">+1,000</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" ${item.addons.includes('Hazelnut syrup') ? 'checked' : ''} 
+                                           onchange="toggleAddon('Hazelnut syrup')">
+                                    <span>Hazelnut syrup</span>
+                                    <span class="addon-price">+1,000</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="customization-section">
+                        <div class="customization-title">Special Instructions</div>
+                        <textarea class="textarea-input" placeholder="Any special requests?" 
+                                  onchange="updateNotes(this.value)">${item.notes}</textarea>
+                    </div>
+                `;
+            } else {
+                customizationHTML = `
+                    <div class="customization-section">
+                        <div class="customization-title">Quantity</div>
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="updateQuantity(-1)">−</button>
+                            <span class="qty-display" id="qtyDisplay">${item.quantity}</span>
+                            <button class="qty-btn" onclick="updateQuantity(1)">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            detail.innerHTML = `
+                <div class="item-icon-large">${item.icon}</div>
+                <h2 class="item-name">${item.name}</h2>
+                <p class="item-desc">${item.desc}</p>
+                <div class="item-price-large" id="itemPrice">${formatPrice(calculateItemPrice())}</div>
+                
+                ${customizationHTML}
+                
+                <button class="btn-primary" onclick="addToCart()">ADD TO CART — ${formatPrice(calculateItemPrice())}</button>
+            `;
+        }
+
+        function calculateItemPrice() {
+            const item = state.currentItem;
+            let price = item.price;
+            
+            if (item.size === 'Large') price += 2000;
+            if (item.milk === 'Oat' || item.milk === 'Soy') price += 1500;
+            
+            item.addons.forEach(addon => {
+                if (addon === 'Extra shot') price += 2000;
+                if (addon === 'Whipped cream') price += 1500;
+                if (['Vanilla syrup', 'Caramel syrup', 'Hazelnut syrup'].includes(addon)) price += 1000;
+            });
+            
+            return price * item.quantity;
+        }
+
+        function updateQuantity(change) {
+            state.currentItem.quantity = Math.max(1, state.currentItem.quantity + change);
+            document.getElementById('qtyDisplay').textContent = state.currentItem.quantity;
+            document.getElementById('itemPrice').textContent = formatPrice(calculateItemPrice());
+            document.querySelector('.btn-primary').textContent = `ADD TO CART — ${formatPrice(calculateItemPrice())}`;
+        }
+
+        function updateOption(field, value) {
+            state.currentItem[field] = value;
+            renderItemDetail();
+        }
+
+        function toggleAddon(addon) {
+            const index = state.currentItem.addons.indexOf(addon);
+            if (index > -1) {
+                state.currentItem.addons.splice(index, 1);
+            } else {
+                state.currentItem.addons.push(addon);
+            }
+            document.getElementById('itemPrice').textContent = formatPrice(calculateItemPrice());
+            document.querySelector('.btn-primary').textContent = `ADD TO CART — ${formatPrice(calculateItemPrice())}`;
+        }
+
+        function updateNotes(value) {
+            state.currentItem.notes = value;
+        }
+
+        function addToCart() {
+            const item = state.currentItem;
+            const cartItem = {
+                id: Date.now(),
+                itemId: item.id,
+                name: item.name,
+                icon: item.icon,
+                basePrice: item.price,
+                quantity: item.quantity,
+                size: item.size,
+                milk: item.milk,
+                sugar: item.sugar,
+                addons: [...item.addons],
+                notes: item.notes,
+                totalPrice: calculateItemPrice()
+            };
+            
+            state.cart.push(cartItem);
+            saveState();
+            updateCartBadge();
+            
+            // Show success feedback
+            const btn = document.querySelector('.btn-primary');
+            btn.textContent = 'ADDED ✓';
+            btn.classList.add('btn-added');
+            
+            setTimeout(() => {
+                showPage('menu');
+            }, 500);
+        }
+
+        // ========================
+        // CART PAGE
+        // ========================
+        
+        function renderCart() {
+            const content = document.getElementById('cartContent');
+            
+            if (state.cart.length === 0) {
+                content.innerHTML = `
+                    <div class="cart-empty">
+                        <div class="cart-empty-icon">☕</div>
+                        <div class="cart-empty-text">Your cart is empty</div>
+                        <button class="btn-primary" onclick="showPage('menu')">START YOUR ORDER</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            const subtotal = getCartSubtotal();
+            const deliveryFee = state.orderType === 'delivery' ? 5000 : 0;
+            const total = subtotal + deliveryFee;
+            
+            content.innerHTML = `
+                <div class="cart-items-list">
+                    ${state.cart.map((item, index) => `
+                        <div class="cart-item">
+                            <div class="cart-item-header">
+                                <div class="cart-item-name">${item.icon} ${item.name}</div>
+                                <button class="cart-item-remove" onclick="removeFromCart(${index})">×</button>
+                            </div>
+                            ${item.size || item.milk || item.sugar || item.addons.length > 0 ? `
+                                <div class="cart-item-mods">
+                                    ${item.size !== 'Regular' ? `Size: ${item.size}<br>` : ''}
+                                    ${item.milk ? `Milk: ${item.milk}<br>` : ''}
+                                    ${item.sugar ? `Sugar: ${item.sugar}<br>` : ''}
+                                    ${item.addons.length > 0 ? `Add-ons: ${item.addons.join(', ')}<br>` : ''}
+                                    ${item.notes ? `Note: ${item.notes}` : ''}
+                                </div>
+                            ` : ''}
+                            <div class="cart-item-footer">
+                                <div class="cart-item-qty-controls">
+                                    <button class="cart-qty-btn" onclick="updateCartItemQty(${index}, -1)">−</button>
+                                    <span class="cart-item-qty">${item.quantity}</span>
+                                    <button class="cart-qty-btn" onclick="updateCartItemQty(${index}, 1)">+</button>
+                                </div>
+                                <div class="cart-item-price">${formatPrice(item.totalPrice)}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">Subtotal</span>
+                        <span class="summary-value">${formatPrice(subtotal)}</span>
+                    </div>
+                    ${state.orderType === 'delivery' ? `
+                        <div class="summary-row">
+                            <span class="summary-label">Delivery Fee</span>
+                            <span class="summary-value">${formatPrice(deliveryFee)}</span>
+                        </div>
+                    ` : ''}
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>${formatPrice(total)}</span>
+                    </div>
+                </div>
+                
+                <div class="cart-actions">
+                    <button class="btn-secondary" onclick="showPage('menu')">ADD MORE ITEMS</button>
+                    <button class="btn-primary" onclick="showPage('checkout')">CONTINUE TO CHECKOUT →</button>
+                </div>
+            `;
+        }
+
+        function getCartSubtotal() {
+            return state.cart.reduce((sum, item) => sum + item.totalPrice, 0);
+        }
+
+        function getCartTotal() {
+            const subtotal = getCartSubtotal();
+            const deliveryFee = state.orderType === 'delivery' ? 5000 : 0;
+            return subtotal + deliveryFee;
+        }
+
+        function updateCartItemQty(index, change) {
+            state.cart[index].quantity = Math.max(1, state.cart[index].quantity + change);
+            state.cart[index].totalPrice = (state.cart[index].totalPrice / (state.cart[index].quantity - change)) * state.cart[index].quantity;
+            saveState();
+            renderCart();
+            updateCartBadge();
+        }
+
+        function removeFromCart(index) {
+            state.cart.splice(index, 1);
+            saveState();
+            renderCart();
+            updateCartBadge();
+            showToast('Item removed from cart');
+        }
+
+        // ========================
+        // CHECKOUT PAGE
+        // ========================
+        
+        function renderCheckout() {
+            const content = document.getElementById('checkoutContent');
+            
+            let html = '';
+            
+            // ETA / Address Section
+            if (state.orderType === 'pickup') {
+                html += `
+                    <div class="checkout-section">
+                        <h3 class="checkout-section-title">Pickup Time</h3>
+                        <div class="eta-options">
+                            <div class="eta-option ${state.eta === 'ASAP' ? 'active' : ''}" onclick="selectETA('ASAP')">
+                                <div class="eta-option-time">ASAP</div>
+                                <div class="eta-option-label">~10 min</div>
+                            </div>
+                            <div class="eta-option ${state.eta === '15 min' ? 'active' : ''}" onclick="selectETA('15 min')">
+                                <div class="eta-option-time">15 min</div>
+                            </div>
+                            <div class="eta-option ${state.eta === '30 min' ? 'active' : ''}" onclick="selectETA('30 min')">
+                                <div class="eta-option-time">30 min</div>
+                            </div>
+                            <div class="eta-option ${state.eta === '45 min' ? 'active' : ''}" onclick="selectETA('45 min')">
+                                <div class="eta-option-time">45 min</div>
+                            </div>
+                            <div class="eta-option ${state.eta === '1 hour' ? 'active' : ''}" onclick="selectETA('1 hour')">
+                                <div class="eta-option-time">1 hour</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="checkout-section">
+                        <h3 class="checkout-section-title">Delivery Address</h3>
+                        <div class="form-group">
+                            <label class="form-label">Street Address *</label>
+                            <input type="text" class="form-input" id="deliveryAddress" 
+                                   placeholder="Enter your delivery address" 
+                                   value="${state.deliveryAddress?.street || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Area/Zone *</label>
+                            <input type="text" class="form-input" id="deliveryZone" 
+                                   placeholder="e.g., Kololo, Nakasero" 
+                                   value="${state.deliveryAddress?.zone || ''}">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Delivery Notes</label>
+                            <textarea class="textarea-input" id="deliveryNotes" 
+                                      placeholder="Any special delivery instructions?">${state.deliveryAddress?.notes || ''}</textarea>
+                        </div>
+                        <div class="cart-summary">
+                            <div class="summary-row">
+                                <span class="summary-label">Delivery Fee</span>
+                                <span class="summary-value">5,000 UGX</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">ETA</span>
+                                <span class="summary-value">30-45 minutes</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Customer Details
+            html += `
+                <div class="checkout-section">
+                    <h3 class="checkout-section-title">Your Details</h3>
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" class="form-input" id="customerName" 
+                               placeholder="Enter your name" 
+                               value="${state.customer?.name || ''}">
+                        <div class="form-error hidden" id="nameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number *</label>
+                        <input type="tel" class="form-input" id="customerPhone" 
+                               placeholder="07XX XXX XXX" 
+                               value="${state.customer?.phone || ''}">
+                        <div class="form-error hidden" id="phoneError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email (optional)</label>
+                        <input type="email" class="form-input" id="customerEmail" 
+                               placeholder="your@email.com" 
+                               value="${state.customer?.email || ''}">
+                    </div>
+                </div>
+            `;
+            
+            // Payment Method
+            html += `
+                <div class="checkout-section">
+                    <h3 class="checkout-section-title">Payment Method</h3>
+                    <div class="payment-options">
+                        ${state.orderType === 'pickup' ? `
+                            <div class="payment-option ${state.paymentMethod === 'Cash on Pickup' ? 'active' : ''}" 
+                                 onclick="selectPayment('Cash on Pickup')">
+                                <div class="payment-icon">💵</div>
+                                <div class="payment-label">Cash on Pickup</div>
+                            </div>
+                        ` : ''}
+                        <div class="payment-option ${state.paymentMethod === 'MTN Mobile Money' ? 'active' : ''}" 
+                             onclick="selectPayment('MTN Mobile Money')">
+                            <div class="payment-icon">📱</div>
+                            <div class="payment-label">MTN Mobile Money</div>
+                        </div>
+                        <div class="payment-option ${state.paymentMethod === 'Airtel Money' ? 'active' : ''}" 
+                             onclick="selectPayment('Airtel Money')">
+                            <div class="payment-icon">📱</div>
+                            <div class="payment-label">Airtel Money</div>
+                        </div>
+                        <div class="payment-option ${state.paymentMethod === 'Card' ? 'active' : ''}" 
+                             onclick="selectPayment('Card')">
+                            <div class="payment-icon">💳</div>
+                            <div class="payment-label">Card</div>
+                        </div>
+                        ${state.orderType === 'delivery' ? `
+                            <div class="payment-option ${state.paymentMethod === 'Cash on Delivery' ? 'active' : ''}" 
+                                 onclick="selectPayment('Cash on Delivery')">
+                                <div class="payment-icon">💵</div>
+                                <div class="payment-label">Cash on Delivery</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Order Summary
+            const subtotal = getCartSubtotal();
+            const deliveryFee = state.orderType === 'delivery' ? 5000 : 0;
+            const total = subtotal + deliveryFee;
+            
+            html += `
+                <div class="checkout-section">
+                    <h3 class="checkout-section-title">Order Summary</h3>
+                    <div class="cart-summary">
+                        ${state.cart.map(item => `
+                            <div class="summary-row">
+                                <span class="summary-label">${item.quantity}x ${item.name}</span>
+                                <span class="summary-value">${formatPrice(item.totalPrice)}</span>
+                            </div>
+                        `).join('')}
+                        <div class="summary-row">
+                            <span class="summary-label">Subtotal</span>
+                            <span class="summary-value">${formatPrice(subtotal)}</span>
+                        </div>
+                        ${state.orderType === 'delivery' ? `
+                            <div class="summary-row">
+                                <span class="summary-label">Delivery Fee</span>
+                                <span class="summary-value">${formatPrice(deliveryFee)}</span>
+                            </div>
+                        ` : ''}
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span>${formatPrice(total)}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="placeOrder()">PLACE ORDER — ${formatPrice(total)}</button>
+                <div style="height: 2rem;"></div>
+            `;
+            
+            content.innerHTML = html;
+        }
+
+        function selectETA(eta) {
+            state.eta = eta;
+            saveState();
+            renderCheckout();
+        }
+
+        function selectPayment(method) {
+            state.paymentMethod = method;
+            saveState();
+            renderCheckout();
+        }
+
+        function placeOrder() {
+            // Validate
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            
+            let isValid = true;
+            
+            if (!name) {
+                document.getElementById('nameError').textContent = 'Name is required';
+                document.getElementById('nameError').classList.remove('hidden');
+                document.getElementById('customerName').classList.add('error');
+                isValid = false;
+            }
+            
+            if (!phone || phone.length < 9) {
+                document.getElementById('phoneError').textContent = 'Valid phone number is required';
+                document.getElementById('phoneError').classList.remove('hidden');
+                document.getElementById('customerPhone').classList.add('error');
+                isValid = false;
+            }
+            
+            if (state.orderType === 'delivery') {
+                const address = document.getElementById('deliveryAddress').value.trim();
+                const zone = document.getElementById('deliveryZone').value.trim();
+                const notes = document.getElementById('deliveryNotes').value.trim();
+                
+                if (!address || !zone) {
+                    showToast('Please enter delivery address');
+                    isValid = false;
+                } else {
+                    state.deliveryAddress = { street: address, zone, notes };
+                }
+            }
+            
+            if (state.orderType === 'pickup' && !state.eta) {
+                showToast('Please select pickup time');
+                isValid = false;
+            }
+            
+            if (!state.paymentMethod) {
+                showToast('Please select payment method');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Save customer
+            state.customer = {
+                name,
+                phone,
+                email: document.getElementById('customerEmail').value.trim()
+            };
+            saveState();
+            
+            // Generate order
+            const orderRef = 'LPE-' + Math.floor(100000 + Math.random() * 900000);
+            localStorage.setItem('lpe_last_order', JSON.stringify({
+                ref: orderRef,
+                orderType: state.orderType,
+                outlet: state.selectedOutlet,
+                deliveryAddress: state.deliveryAddress,
+                eta: state.eta,
+                cart: state.cart,
+                total: getCartTotal(),
+                customer: state.customer,
+                paymentMethod: state.paymentMethod,
+                timestamp: new Date().toISOString()
+            }));
+            
+            showConfirmation(orderRef);
+        }
+
+        // ========================
+        // CONFIRMATION PAGE
+        // ========================
+        
+        function showConfirmation(orderRef) {
+            showPage('confirmation');
+            
+            const lastOrder = JSON.parse(localStorage.getItem('lpe_last_order'));
+            const content = document.getElementById('confirmationContent');
+            
+            content.innerHTML = `
+                <div class="checkmark">
+                    <svg viewBox="0 0 52 52">
+                        <polyline points="14 27 22 35 38 19" />
+                    </svg>
+                </div>
+                
+                <h1 class="confirmation-title">ORDER PLACED! 🎉</h1>
+                <div class="order-ref">${orderRef}</div>
+                
+                <div class="confirmation-details">
+                    ${state.orderType === 'pickup' ? `
+                        <div class="confirmation-row">
+                            <span class="confirmation-row-label">Pickup from</span>
+                            <span class="confirmation-row-value">${state.selectedOutlet}</span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-row-label">Ready in</span>
+                            <span class="confirmation-row-value">${state.eta || 'ASAP'}</span>
+                        </div>
+                    ` : `
+                        <div class="confirmation-row">
+                            <span class="confirmation-row-label">Delivering to</span>
+                            <span class="confirmation-row-value">${state.deliveryAddress.zone}</span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-row-label">ETA</span>
+                            <span class="confirmation-row-value">30-45 minutes</span>
+                        </div>
+                    `}
+                    <div class="confirmation-row">
+                        <span class="confirmation-row-label">Items</span>
+                        <span class="confirmation-row-value">${state.cart.reduce((sum, item) => sum + item.quantity, 0)} items</span>
+                    </div>
+                    <div class="confirmation-row">
+                        <span class="confirmation-row-label">Total Paid</span>
+                        <span class="confirmation-row-value">${formatPrice(lastOrder.total)}</span>
+                    </div>
+                    <div class="confirmation-row">
+                        <span class="confirmation-row-label">Payment</span>
+                        <span class="confirmation-row-value">${state.paymentMethod}</span>
+                    </div>
+                </div>
+                
+                <div class="confirmation-actions">
+                    <button class="btn-primary" onclick="trackOrder()">TRACK ORDER</button>
+                    <button class="btn-secondary" onclick="orderAgain()">ORDER AGAIN</button>
+                </div>
+            `;
+            
+            // Create confetti
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const confettiContainer = document.createElement('div');
+            confettiContainer.className = 'confetti';
+            document.body.appendChild(confettiContainer);
+            
+            const colors = ['#8B0000', '#C0392B', '#F5E6D3', '#D4A030', '#2E7D32'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confettiContainer.appendChild(confetti);
+            }
+            
+            setTimeout(() => {
+                confettiContainer.remove();
+            }, 4000);
+        }
+
+        function trackOrder() {
+            showToast("We'll notify you via SMS when your order is ready!");
+        }
+
+        function orderAgain() {
+            // Clear cart but keep other state
+            state.cart = [];
+            state.eta = null;
+            state.paymentMethod = null;
+            saveState();
+            updateCartBadge();
+            showPage('landing');
+        }
+
+        // ========================
+        // INITIALIZATION
+        // ========================
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            
+            // If returning user with order type, show appropriate page
+            if (state.orderType === 'pickup' && state.selectedOutlet) {
+                // Ready to order
+            } else if (state.orderType === 'delivery') {
+                // Ready to order
+            }
+        });
+    </script>
+</body>
+</html>
